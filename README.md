@@ -98,6 +98,36 @@ Options:
 ### `getSma(symbolCode, timeFrame, period?)`
 - Returns SMA points for one symbol/timeframe.
 
+### `createAlert(request)`
+- Creates a new alert rule.
+
+### `getAlerts(status?)`
+- Lists alert rules, optionally filtered by status.
+
+### `deleteAlert(alertId)`
+- Deletes an alert rule by id.
+
+### `queryScreener(request)`
+- Queries symbols by trend/volatility/momentum/liquidity filters.
+
+### `getStrategySignal(symbolCode, timeFrame)`
+- Returns a composite strategy signal with confidence and risk level.
+
+### `createWatchlist(request)`
+- Creates a cloud watchlist.
+
+### `getWatchlists()`
+- Lists cloud watchlists.
+
+### `addWatchlistItem(watchlistId, request)`
+- Adds a symbol to a watchlist.
+
+### `removeWatchlistItem(watchlistId, symbolCode)`
+- Removes a symbol from a watchlist.
+
+### `getMarketCalendar(date?, timezone?)`
+- Returns market sessions and high-impact events.
+
 ## WebSocket API Reference
 
 ### `streamPrice(symbolCode, timeFrame, handlers)`
@@ -175,6 +205,7 @@ try {
 ## Beta Notes
 
 - Current REST scope: price, candles, history, symbols, SMA.
+- Expanded REST scope: alerts, screener, strategy signal, watchlist, and market calendar.
 - Current WebSocket scope: price and candles with automatic reconnect.
 - API surface may expand before stable `1.0`.
 
