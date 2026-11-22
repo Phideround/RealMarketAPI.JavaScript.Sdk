@@ -1,4 +1,11 @@
 import WebSocket from "ws";
+import type {
+  MultiTimeframeResult,
+  OrderFlowImbalanceResult,
+  PriceCandleResult,
+  PriceMarketResult,
+  PriceTickerResult
+} from "./types.js";
 
 export interface WebSocketHandlers<T> {
   onMessage: (message: T) => void;
@@ -24,12 +31,29 @@ export class RealMarketApiWebSocket {
     this.reconnectDelayMs = options.reconnectDelayMs ?? 2000;
   }
 
-  streamPrice<T>(symbolCode: string, timeFrame: string, handlers: WebSocketHandlers<T>): () => void {
+  streamPrice<T = PriceTickerResult>(symbolCode: string, timeFrame: string, handlers: WebSocketHandlers<T>): () => void {
     return this.stream("price", { symbolCode, timeFrame }, handlers);
   }
 
-  streamCandles<T>(symbolCode: string, timeFrame: string, handlers: WebSocketHandlers<T>): () => void {
+  streamCandles<T = PriceCandleResult>(symbolCode: string, timeFrame: string, handlers: WebSocketHandlers<T>): () => void {
     return this.stream("candles", { symbolCode, timeFrame }, handlers);
+  }
+
+  streamOrderFlowImbalance<T = OrderFlowImbalanceResult>(
+    symbolCode: string,
+    timeFrame: string,
+    handlers: WebSocketHandlers<T>
+  ): () => void {
+    return this.stream("orderflow/imbalance", { symbolCode, timeFrame }, handlers);
+  }
+
+  streamMultiTimeframe<T = MultiTimeframeResult>(symbolCode: string, handlers: WebSocketHandlers<T>): () => void {
+    return this.stream("multi-timeframe", { symbolCode }, handlers);
+  }
+
+  /** Each message is a snapshot array covering every symbol on the key's plan. */
+  streamMarket<T = PriceMarketResult[]>(handlers: WebSocketHandlers<T>): () => void {
+    return this.stream("market", {}, handlers);
   }
 
   private stream<T>(

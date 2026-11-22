@@ -7,20 +7,21 @@ TypeScript SDK for RealMarketAPI, published to npm as `realmarketapi-js-sdk-beta
 ```bash
 npm ci
 npm run build      # tsc → dist/ (dist is what gets published)
+npm test           # build, then node --test (test/*.test.mjs run against dist/)
 ```
 
-No tests or linter yet; `npm run build` with `strict` TypeScript is the check.
+No linter. Tests use a fake `fetchImpl` for REST and a local `ws` server for streams; add a row to the case table in `test/client.test.mjs` or `test/websocket.test.mjs` for each new method.
 
 ## Layout
 
 | File | What |
 |---|---|
 | `src/client.ts` | `RealMarketApiClient`: one `async` method per REST endpoint, plus private `get/post/delete` helpers that add `apiKey` to the query and throw `Error("RealMarketApi error <status>: <body>")` on non-2xx. |
-| `src/websocket.ts` | `RealMarketApiWebSocket`: `streamPrice` / `streamCandles` with auto-reconnect; returns an unsubscribe function. |
+| `src/websocket.ts` | `RealMarketApiWebSocket`: `streamPrice`, `streamCandles`, `streamOrderFlowImbalance`, `streamMultiTimeframe`, `streamMarket` with auto-reconnect; returns an unsubscribe function. |
 | `src/types.ts` | All request/response interfaces (camelCase, matching the API JSON). |
 | `src/index.ts` | Re-exports the three files. |
 
-Coverage is a **subset** of the API: price, candle, history, symbol, SMA, alerts, screener, strategy signal, watchlists, market calendar. The .NET SDK (`../RealMarketAPI.Sdk`) is the full reference.
+Coverage matches the .NET SDK (`../RealMarketAPI.Sdk`), which stays the reference, except its MCP client. Types in `src/types.ts` follow the backend responses; where the .NET models drift from the backend (e.g. `PriceMarketResult.historyPrices`, nullable limits on `AccountMeResult`), the backend wins.
 
 ## Conventions
 

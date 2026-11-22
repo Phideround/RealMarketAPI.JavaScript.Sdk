@@ -14,6 +14,16 @@ export class RealMarketApiWebSocket {
     streamCandles(symbolCode, timeFrame, handlers) {
         return this.stream("candles", { symbolCode, timeFrame }, handlers);
     }
+    streamOrderFlowImbalance(symbolCode, timeFrame, handlers) {
+        return this.stream("orderflow/imbalance", { symbolCode, timeFrame }, handlers);
+    }
+    streamMultiTimeframe(symbolCode, handlers) {
+        return this.stream("multi-timeframe", { symbolCode }, handlers);
+    }
+    /** Each message is a snapshot array covering every symbol on the key's plan. */
+    streamMarket(handlers) {
+        return this.stream("market", {}, handlers);
+    }
     stream(endpoint, params, handlers) {
         let closedByUser = false;
         let socket = null;
